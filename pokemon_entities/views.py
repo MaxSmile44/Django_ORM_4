@@ -3,6 +3,7 @@ import json
 
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
+from django.utils import timezone
 
 from pogomap.settings import MEDIA_URL
 from pokemon_entities.models import Pokemon
@@ -31,23 +32,24 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
 def show_all_pokemons(request):
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     pokemons = Pokemon.objects.all()
-    for pokemon in pokemons:
-        for pokemon_entity in pokemon.pokemonentity_set.all():
-            add_pokemon(
-                folium_map,
-                pokemon_entity.lat,
-                pokemon_entity.lon,
-                request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}')
-            )
-
     pokemons_on_page = []
     for pokemon in pokemons:
+        for pokemon_entity in pokemon.pokemonentity_set.all():
+            if pokemon_entity.appeared_at:
+                if (timezone.localtime() > pokemon_entity.appeared_at.astimezone()
+                        and (pokemon_entity.disappeared_at is None
+                             or timezone.localtime() < pokemon_entity.disappeared_at.astimezone())):
+                    add_pokemon(
+                        folium_map,
+                        pokemon_entity.lat,
+                        pokemon_entity.lon,
+                        request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}')
+                    )
         pokemons_on_page.append({
             'pokemon_id': pokemon.pk,
             'img_url': request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}'),
             'title_ru': pokemon.title,
         })
-
     return render(request, 'mainpage.html', context={
         'map': folium_map._repr_html_(),
         'pokemons': pokemons_on_page,
