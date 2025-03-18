@@ -72,6 +72,7 @@ def show_pokemon(request, pokemon_id):
         'pokemon_id': pokemon.pk,
         'img_url': request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}'),
         'title_ru': pokemon.title,
+        'description': pokemon.description,
     }
 
     create_map(request, pokemon, folium_map)
