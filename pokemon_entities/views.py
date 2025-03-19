@@ -68,7 +68,7 @@ def show_pokemon(request, pokemon_id):
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
     pokemon_on_page = {
         'pokemon_id': pokemon.pk,
-        'img_url': request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}'),
+        'img_url': request.build_absolute_uri(pokemon.image.url),
         'title_ru': pokemon.title,
         'title_en': pokemon.title_en,
         'title_jp': pokemon.title_jp,
@@ -78,13 +78,13 @@ def show_pokemon(request, pokemon_id):
         pokemon_on_page['previous_evolution'] = {
                 'title_ru': pokemon.evolutions.first().title,
                 'pokemon_id': pokemon.evolutions.first().pk,
-                'img_url': request.build_absolute_uri(f'{MEDIA_URL}{pokemon.evolutions.first().image}'),
+                'img_url': request.build_absolute_uri(pokemon.evolutions.first().image.url),
         }
     if pokemon.evolution:
         pokemon_on_page['next_evolution'] = {
                 'title_ru': pokemon.evolution.title,
                 'pokemon_id': pokemon.evolution.pk,
-                'img_url': request.build_absolute_uri(f'{MEDIA_URL}{pokemon.evolution.image}'),
+                'img_url': request.build_absolute_uri(pokemon.evolution.image.url),
         }
 
     create_map(request, pokemon, folium_map)
