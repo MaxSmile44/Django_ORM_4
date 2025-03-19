@@ -1,9 +1,8 @@
 import folium
-import json
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseNotFound
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.utils import timezone
 
 from pogomap.settings import MEDIA_URL
@@ -76,6 +75,18 @@ def show_pokemon(request, pokemon_id):
         'title_jp': pokemon.title_jp,
         'description': pokemon.description,
     }
+    if pokemon.evolutions.first():
+        pokemon_on_page['previous_evolution'] = {
+                'title_ru': pokemon.evolutions.first().title,
+                'pokemon_id': pokemon.evolutions.first().pk,
+                'img_url': request.build_absolute_uri(f'{MEDIA_URL}{pokemon.evolutions.first().image}'),
+        }
+    if pokemon.evolution:
+        pokemon_on_page['next_evolution'] = {
+                'title_ru': pokemon.evolution.title,
+                'pokemon_id': pokemon.evolution.pk,
+                'img_url': request.build_absolute_uri(f'{MEDIA_URL}{pokemon.evolution.image}'),
+        }
 
     create_map(request, pokemon, folium_map)
 
