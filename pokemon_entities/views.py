@@ -33,8 +33,7 @@ def create_map(request, pokemon, folium_map):
     for pokemon_entity in pokemon.pokemonentity_set.all():
         if pokemon_entity.appeared_at:
             if (timezone.localtime() > pokemon_entity.appeared_at.astimezone()
-                    and (pokemon_entity.disappeared_at is None
-                         or timezone.localtime() < pokemon_entity.disappeared_at.astimezone())):
+                    and timezone.localtime() < pokemon_entity.disappeared_at.astimezone()):
                 add_pokemon(
                     folium_map,
                     pokemon_entity.lat,
