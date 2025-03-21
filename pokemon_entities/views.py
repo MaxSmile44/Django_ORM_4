@@ -30,7 +30,7 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
 
 
 def create_map(request, pokemon, folium_map):
-    for pokemon_entity in pokemon.pokemonentity_set.all():
+    for pokemon_entity in pokemon.pokemon_entities.all():
         if pokemon_entity.appeared_at:
             if (timezone.localtime() > pokemon_entity.appeared_at.astimezone()
                     and timezone.localtime() < pokemon_entity.disappeared_at.astimezone()):
