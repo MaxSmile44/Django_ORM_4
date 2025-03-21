@@ -28,15 +28,15 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
 
 
 def create_map(request, pokemon, folium_map):
-    for pokemon_entity in pokemon.pokemon_entities.all():
-        if pokemon_entity.appeared_at:
-            if (timezone.localtime() > pokemon_entity.appeared_at.astimezone()
-                    and (not pokemon_entity.disappeared_at
-                         or timezone.localtime() < pokemon_entity.disappeared_at.astimezone())):
+    for entity in pokemon.entities.all():
+        if entity.appeared_at:
+            if (timezone.localtime() > entity.appeared_at.astimezone()
+                    and (not entity.disappeared_at
+                         or timezone.localtime() < entity.disappeared_at.astimezone())):
                 add_pokemon(
                     folium_map,
-                    pokemon_entity.lat,
-                    pokemon_entity.lon,
+                    entity.lat,
+                    entity.lon,
                     request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}')
                 )
 
@@ -70,17 +70,17 @@ def show_pokemon(request, pokemon_id):
         'title_jp': pokemon.title_jp,
         'description': pokemon.description,
     }
-    if pokemon.evolutions.first():
+    if pokemon.changes.first():
         pokemon_on_page['previous_evolution'] = {
-                'title_ru': pokemon.evolutions.first().title,
-                'pokemon_id': pokemon.evolutions.first().pk,
-                'img_url': request.build_absolute_uri(pokemon.evolutions.first().image.url),
+                'title_ru': pokemon.changes.first().title,
+                'pokemon_id': pokemon.changes.first().pk,
+                'img_url': request.build_absolute_uri(pokemon.changes.first().image.url),
         }
-    if pokemon.evolution:
+    if pokemon.change:
         pokemon_on_page['next_evolution'] = {
-                'title_ru': pokemon.evolution.title,
-                'pokemon_id': pokemon.evolution.pk,
-                'img_url': request.build_absolute_uri(pokemon.evolution.image.url),
+                'title_ru': pokemon.change.title,
+                'pokemon_id': pokemon.change.pk,
+                'img_url': request.build_absolute_uri(pokemon.change.image.url),
         }
 
     create_map(request, pokemon, folium_map)
