@@ -37,7 +37,7 @@ def create_map(request, pokemon, folium_map):
                     folium_map,
                     entity.lat,
                     entity.lon,
-                    request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}')
+                    request.build_absolute_uri(pokemon.image.url)
                 )
 
 
@@ -49,7 +49,7 @@ def show_all_pokemons(request):
         create_map(request, pokemon, folium_map)
         pokemons_on_page.append({
             'pokemon_id': pokemon.pk,
-            'img_url': request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}'),
+            'img_url': request.build_absolute_uri(pokemon.image.url),
             'title_ru': pokemon.title,
         })
 
