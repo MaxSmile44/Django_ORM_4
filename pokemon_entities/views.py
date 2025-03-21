@@ -1,8 +1,6 @@
 import folium
 
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 
 from pogomap.settings import MEDIA_URL
@@ -63,10 +61,7 @@ def show_all_pokemons(request):
 
 def show_pokemon(request, pokemon_id):
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    try:
-        pokemon = Pokemon.objects.get(pk=pokemon_id)
-    except ObjectDoesNotExist:
-        return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
+    pokemon = get_object_or_404(Pokemon, pk=pokemon_id)
     pokemon_on_page = {
         'pokemon_id': pokemon.pk,
         'img_url': request.build_absolute_uri(pokemon.image.url),
