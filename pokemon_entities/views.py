@@ -70,17 +70,17 @@ def show_pokemon(request, pokemon_id):
         'title_jp': pokemon.title_jp,
         'description': pokemon.description,
     }
-    if pokemon.previous_evolution.first():
+    if pokemon.next_evolution.first():
         pokemon_on_page['previous_evolution'] = {
-                'title_ru': pokemon.previous_evolution.first().title,
-                'pokemon_id': pokemon.previous_evolution.first().pk,
-                'img_url': request.build_absolute_uri(pokemon.previous_evolution.first().image.url),
+                'title_ru': pokemon.next_evolution.first().title,
+                'pokemon_id': pokemon.next_evolution.first().pk,
+                'img_url': request.build_absolute_uri(pokemon.next_evolution.first().image.url),
         }
-    if pokemon.next_evolution:
+    if pokemon.previous_evolution:
         pokemon_on_page['next_evolution'] = {
-                'title_ru': pokemon.next_evolution.title,
-                'pokemon_id': pokemon.next_evolution.pk,
-                'img_url': request.build_absolute_uri(pokemon.next_evolution.image.url),
+                'title_ru': pokemon.previous_evolution.title,
+                'pokemon_id': pokemon.previous_evolution.pk,
+                'img_url': request.build_absolute_uri(pokemon.previous_evolution.image.url),
         }
 
     create_map(request, pokemon, folium_map)

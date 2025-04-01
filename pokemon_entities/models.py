@@ -3,8 +3,8 @@ from django.db import models  # noqa F401
 # your models here
 class Pokemon(models.Model):
     """Покемон"""
-    next_evolution = models.ForeignKey('self', verbose_name='В кого эволюционирует',
-                                  related_name="previous_evolution", on_delete=models.SET_NULL, null=True, blank=True)
+    previous_evolution = models.ForeignKey('self', verbose_name='В кого эволюционирует',
+                                  related_name="next_evolution", on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(verbose_name='Название', max_length=200)
     title_en = models.CharField(verbose_name='Название на английском', max_length=200, blank=True)
     title_jp = models.CharField(verbose_name='Название на японском', max_length=200, blank=True)
